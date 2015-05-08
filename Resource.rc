@@ -1,0 +1,35 @@
+
+
+#include "Resource.h"
+
+// icon
+IDI_WOWLINK			ICON		"Res\\WowLink.ico"
+IDI_WOWLINK_SM		ICON		"Res\\WowLink_sm.ico"
+
+IDB_BACKGROUND		BITMAP		"Res\\wow_bg.bmp"
+IDB_WOW1			BITMAP		"Res\\1.bmp"
+IDB_WOW2			BITMAP		"Res\\2.bmp"
+IDB_WOW3			BITMAP		"Res\\3.bmp"
+IDB_WOW4			BITMAP		"Res\\4.bmp"
+IDB_WOW5			BITMAP		"Res\\5.bmp"
+IDB_WOW6			BITMAP		"Res\\6.bmp"
+IDB_WOW7			BITMAP		"Res\\7.bmp"
+IDB_WOW8			BITMAP		"Res\\8.bmp"
+IDB_WOW9			BITMAP		"Res\\9.bmp"
+IDB_WOW10			BITMAP		"Res\\10.bmp"
+IDB_WOW11			BITMAP		"Res\\11.bmp"
+IDB_WOW12			BITMAP		"Res\\12.bmp"
+IDB_WOW13			BITMAP		"Res\\13.bmp"
+IDB_WOW14			BITMAP		"Res\\14.bmp"
+IDB_WOW15			BITMAP		"Res\\15.bmp"
+IDB_WOW16			BITMAP		"Res\\16.bmp"
+IDB_WOW17			BITMAP		"Res\\17.bmp"
+IDB_WOW18			BITMAP		"Res\\18.bmp"
+IDB_WOW19			BITMAP		"Res\\19.bmp"
+IDB_WOW20			BITMAP		"Res\\20.bmp"
+
+IDW_CLICK			WAVE		"Res\\Click.wav"
+IDW_MAKEPAIR		WAVE		"Res\\MakePair.wav"
+IDW_GAMEOVER		WAVE		"Res\\GameOver.wav"
+IDW_WIN				WAVE		"Res\\Win.wav"
+IDW_MISMATCH		WAVE		"Res\\Mismatch.wav"
