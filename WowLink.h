@@ -33,11 +33,11 @@ public:
 
 private:
 	bool CheckMatch(POINT& p1, POINT& p2);
-	void InitIcons();       // 布局
-	bool CheckDead();       // 检查死局
-	void RandIcons();		// 随机分配图标
+	void InitIcons();					// 布局
+	bool CheckDead();					// 检查死局
+	void RandIcons();					// 随机分配图标
 	void DrawRect(HDC hDC, POINT& pt);  // 画选中方框
-	void DrawConnLine(HDC hDC);   // 画连接线
+	void DrawConnLine(HDC hDC);			// 画连接线
 
 	int m_matrix[ROW][COL];
 	BitmapPtr	m_pWowBitmap[ICONCOUNT];
@@ -53,9 +53,10 @@ private:
 	int			m_iMakePair;
 	int			m_iTotalNum;
 	BOOL		m_bGameOver;
-	DWORD		m_dwBeginTime;    // 选中框和连接线存在计时
+	DWORD		m_dwBeginTime;		// 选中框和连接线存在计时
 	DWORD		m_dwEndTime;
-	bool		m_Matched;		  // 配对成功标识
+	bool		m_Matched;			// 配对成功标识
+	bool		m_bSlash;			// 闪屏标识
 	std::vector<POINT> m_v1, m_v2;  // 存储用于对比的临时点
 	POINT		m_ptPair1;			// 未被消除的配对
 	POINT		m_ptPair2;			// 用于指示活局的存在
