@@ -27,6 +27,8 @@ IDB_WOW17			BITMAP		"Res\\17.bmp"
 IDB_WOW18			BITMAP		"Res\\18.bmp"
 IDB_WOW19			BITMAP		"Res\\19.bmp"
 IDB_WOW20			BITMAP		"Res\\20.bmp"
+IDB_COPYRIGHT		BITMAP		"Res\\copyright.bmp"
+IDB_DEDICATED		BITMAP		"Res\\dedicated.bmp"
 
 IDW_CLICK			WAVE		"Res\\Click.wav"
 IDW_MAKEPAIR		WAVE		"Res\\MakePair.wav"

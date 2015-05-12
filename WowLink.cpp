@@ -158,33 +158,20 @@ void WowLink::GameStart(HWND hWindow)
 	HDC hDC = GetDC(hWindow);
 	m_pBackgroundBitmap = std::shared_ptr<Bitmap>(new Bitmap(hDC, IDB_BACKGROUND, m_hInstance));
 	m_pCopyrightBitmap = std::shared_ptr<Bitmap>(new Bitmap(hDC, IDB_COPYRIGHT, m_hInstance));
-	m_pSlashBitmap = std::shared_ptr<Bitmap>(new Bitmap(hDC, IDB_SLASH, m_hInstance));
-	m_pWowBitmap[0] = std::shared_ptr<Bitmap>(new Bitmap(hDC, IDB_WOW1, m_hInstance));
-	m_pWowBitmap[1] = std::shared_ptr<Bitmap>(new Bitmap(hDC, IDB_WOW2, m_hInstance));
-	m_pWowBitmap[2] = std::shared_ptr<Bitmap>(new Bitmap(hDC, IDB_WOW3, m_hInstance));
-	m_pWowBitmap[3] = std::shared_ptr<Bitmap>(new Bitmap(hDC, IDB_WOW4, m_hInstance));
-	m_pWowBitmap[4] = std::shared_ptr<Bitmap>(new Bitmap(hDC, IDB_WOW5, m_hInstance));
-	m_pWowBitmap[5] = std::shared_ptr<Bitmap>(new Bitmap(hDC, IDB_WOW6, m_hInstance));
-	m_pWowBitmap[6] = std::shared_ptr<Bitmap>(new Bitmap(hDC, IDB_WOW7, m_hInstance));
-	m_pWowBitmap[7] = std::shared_ptr<Bitmap>(new Bitmap(hDC, IDB_WOW8, m_hInstance));
-	m_pWowBitmap[8] = std::shared_ptr<Bitmap>(new Bitmap(hDC, IDB_WOW9, m_hInstance));
-	m_pWowBitmap[9] = std::shared_ptr<Bitmap>(new Bitmap(hDC, IDB_WOW10, m_hInstance));
-	m_pWowBitmap[10] = std::shared_ptr<Bitmap>(new Bitmap(hDC, IDB_WOW11, m_hInstance));
-	m_pWowBitmap[11] = std::shared_ptr<Bitmap>(new Bitmap(hDC, IDB_WOW12, m_hInstance));
-	m_pWowBitmap[12] = std::shared_ptr<Bitmap>(new Bitmap(hDC, IDB_WOW13, m_hInstance));
-	m_pWowBitmap[13] = std::shared_ptr<Bitmap>(new Bitmap(hDC, IDB_WOW14, m_hInstance));
-	m_pWowBitmap[14] = std::shared_ptr<Bitmap>(new Bitmap(hDC, IDB_WOW15, m_hInstance));
-	m_pWowBitmap[15] = std::shared_ptr<Bitmap>(new Bitmap(hDC, IDB_WOW16, m_hInstance));
-	m_pWowBitmap[16] = std::shared_ptr<Bitmap>(new Bitmap(hDC, IDB_WOW17, m_hInstance));
-	m_pWowBitmap[17] = std::shared_ptr<Bitmap>(new Bitmap(hDC, IDB_WOW18, m_hInstance));
-	m_pWowBitmap[18] = std::shared_ptr<Bitmap>(new Bitmap(hDC, IDB_WOW19, m_hInstance));
-	m_pWowBitmap[19] = std::shared_ptr<Bitmap>(new Bitmap(hDC, IDB_WOW20, m_hInstance));
-
+	m_pDedicatedBitmap = std::shared_ptr<Bitmap>(new Bitmap(hDC, IDB_DEDICATED, m_hInstance));
+	for (int i = 0; i < ICONCOUNT; ++i)
+	{
+		m_pWowBitmap[i] = std::shared_ptr<Bitmap>(new Bitmap(hDC, 2000 + i, m_hInstance));
+	}
+	
 	// Initialize
 	m_bGameOver = FALSE;
 	m_iTotalNum = (ROW - 2) * (COL - 2);
 	m_Matched = false;
-	m_bSlash = true;
+	m_bCopyright = true;
+	m_bDedicated = false;
+	m_iCopyrightDelay = 50;
+	// m_iDedicatedDelay = 50;
 	m_v1.reserve(20);
 	m_v2.reserve(20);
 	m_ptPair1.x = m_ptPair1.y = m_ptPair2.x = m_ptPair2.y = -1;
@@ -196,12 +183,8 @@ void WowLink::GameStart(HWND hWindow)
 		RandIcons();
 	}
 
-	// show copyright
-	m_pCopyrightBitmap->Draw(hDC, 0, 0);
-	Sleep(3000);
-
 	// play background music
-	PlayMusic(TEXT("Song_of_Elune.mp3"));
+	// PlayMusic(TEXT("Song_of_Elune.mp3"));
 }
 
 void WowLink::GameEnd()
@@ -217,53 +200,76 @@ void WowLink::GameEnd()
 void WowLink::GameActivate(HWND hWindow)
 {
 	// Continue music
-	if (!m_bSlash)
+	if (!m_bDedicated && !m_bCopyright)
 		PlayMusic(TEXT(""), FALSE);
 }
 
 void WowLink::GameDeactivate(HWND hWindow)
 {
 	// Pause music
-	if (!m_bSlash)
+	if (!m_bDedicated && !m_bCopyright)
 		PauseMusic();
 }
 
 void WowLink::GamePaint(HDC hDC)
 {
-	// Draw background
-	m_pBackgroundBitmap->Draw(hDC, 0, 0);
-
-	// Draw icons
-	int iWidth = m_pWowBitmap[0]->GetWidth();
-	int iHeight = m_pWowBitmap[0]->GetHeight();
-	for (int i = 1; i < ROW - 1; ++i)
+	if (m_bCopyright && m_iCopyrightDelay-- > 0)
 	{
-		for (int j = 1; j < COL - 1; ++j)
+		// show copyright
+		m_pCopyrightBitmap->Draw(hDC, 0, 0);
+		if (m_iCopyrightDelay <= 0)
 		{
-			if (m_matrix[i][j] != -1)
-			{
-				m_pWowBitmap[m_matrix[i][j]]->Draw(hDC, j * iWidth, i * iHeight, TRUE);
-			}
+			m_bCopyright = false;
+			m_bDedicated = true;
 		}
 	}
-
-	// Draw Rectangle on selected icon and connect line
-	if (!m_Matched)
+	else if (m_bDedicated /* && m_iDedicatedDelay-- > 0 */)
 	{
-		if (m_ptClick1.x != -1)
-			DrawRect(hDC, m_ptClick1);
-		if (m_ptClick2.x != -1)
-			DrawRect(hDC, m_ptClick2);
+		m_pDedicatedBitmap->Draw(hDC, 0, 0);
+		/*
+		if (m_iDedicatedDelay <= 0)
+		{
+			m_bDedicated = false;
+		}
+		*/
 	}
-	else {
-		m_dwEndTime = GetTickCount();
-		if (m_dwEndTime - m_dwBeginTime < 1000)
+	else
+	{
+		// Draw background
+		m_pBackgroundBitmap->Draw(hDC, 0, 0);
+
+		// Draw icons
+		int iWidth = m_pWowBitmap[0]->GetWidth();
+		int iHeight = m_pWowBitmap[0]->GetHeight();
+		for (int i = 1; i < ROW - 1; ++i)
+		{
+			for (int j = 1; j < COL - 1; ++j)
+			{
+				if (m_matrix[i][j] != -1)
+				{
+					m_pWowBitmap[m_matrix[i][j]]->Draw(hDC, j * iWidth, i * iHeight, TRUE);
+				}
+			}
+		}
+
+		// Draw Rectangle on selected icon and connect line
+		if (!m_Matched)
 		{
 			if (m_ptClick1.x != -1)
 				DrawRect(hDC, m_ptClick1);
 			if (m_ptClick2.x != -1)
 				DrawRect(hDC, m_ptClick2);
-			DrawConnLine(hDC);
+		}
+		else {
+			m_dwEndTime = GetTickCount();
+			if (m_dwEndTime - m_dwBeginTime < 1000)
+			{
+				if (m_ptClick1.x != -1)
+					DrawRect(hDC, m_ptClick1);
+				if (m_ptClick2.x != -1)
+					DrawRect(hDC, m_ptClick2);
+				DrawConnLine(hDC);
+			}
 		}
 	}
 }
@@ -290,6 +296,12 @@ void WowLink::GameCycle()
 
 void WowLink::HandleKeys()
 {
+	if (!m_bGameOver && m_bDedicated && GetAsyncKeyState(VK_RETURN) < 0)
+	{
+		m_bDedicated = false;
+		// play background music
+		PlayMusic(TEXT("Song_of_Elune.mp3"));
+	}
 	if (m_bGameOver && GetAsyncKeyState(VK_RETURN) < 0)
 	{
 		m_bGameOver = FALSE;

@@ -25,6 +25,8 @@
 #define  IDB_WOW19			2018
 #define  IDB_WOW20			2019
 #define  IDB_BACKGROUND		2020
+#define	 IDB_COPYRIGHT		2021
+#define  IDB_DEDICATED		2022
 
 // Wav
 #define  IDW_CLICK			3000

@@ -43,7 +43,7 @@ private:
 	BitmapPtr	m_pWowBitmap[ICONCOUNT];
 	BitmapPtr	m_pBackgroundBitmap;
 	BitmapPtr	m_pCopyrightBitmap;
-	BitmapPtr	m_pSlashBitmap;
+	BitmapPtr	m_pDedicatedBitmap;
 	POINT		m_ptClick1;
 	POINT		m_ptClick2;
 	POINT		m_ptTurnPoint1;
@@ -53,13 +53,16 @@ private:
 	int			m_iMakePair;
 	int			m_iTotalNum;
 	BOOL		m_bGameOver;
-	DWORD		m_dwBeginTime;		// 选中框和连接线存在计时
+	DWORD		m_dwBeginTime;			// 选中框和连接线存在计时
 	DWORD		m_dwEndTime;
-	bool		m_Matched;			// 配对成功标识
-	bool		m_bSlash;			// 闪屏标识
-	std::vector<POINT> m_v1, m_v2;  // 存储用于对比的临时点
-	POINT		m_ptPair1;			// 未被消除的配对
-	POINT		m_ptPair2;			// 用于指示活局的存在
+	bool		m_Matched;				// 配对成功标识
+	bool		m_bCopyright;			// 闪屏标识
+	bool		m_bDedicated;			// 显示text
+	int			m_iCopyrightDelay;		// Copyright显示时长
+	// int			m_iDedicatedDelay;		// Text显示时长
+	std::vector<POINT> m_v1, m_v2;		// 存储用于对比的临时点
+	POINT		m_ptPair1;				// 未被消除的配对
+	POINT		m_ptPair2;				// 用于指示活局的存在
 
 };
 typedef std::shared_ptr<WowLink> WowLinkPtr;
